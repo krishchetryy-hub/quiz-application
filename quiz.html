@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>🚀 Futuristic Quiz App</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+  
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(-45deg, #1e3a5f, #152e47, #0f2130, #1b365d, #0a1927);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 40px 20px;
+      transition: all 0.3s ease;
+    }
+  
+    body.light-mode {
+      background: linear-gradient(135deg, #bdc1c8, #bbc6d7);
+      color: #111;
+    }
+  
+    .container {
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(20px);
+      border-radius: 16px;
+      padding: 30px;
+      width: 100%;
+      max-width: 600px;
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.25);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+  
+    h1, h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #fab300;
+    }
+  
+    select, input, button {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 500;
+    }
+  
+    select, input {
+      background-color: #f0f0f0;
+      color: #333;
+    }
+  
+    button {
+      cursor: pointer;
+      background: linear-gradient(135deg, #ff8008, #ffc837);
+      color: #000;
+      font-weight: bold;
+      transition: background 0.3s ease;
+    }
+  
+    button:hover {
+      background: linear-gradient(135deg, #e09f3e, #ffba08);
+    }
+  
+    button:disabled {
+      background: #cccccc;
+      cursor: not-allowed;
+    }
+  
+    #login-box,
+    #user-form,
+    #question-box,
+    #quiz-box,
+    #summary-box,
+    #loading {
+      display: none;
+    }
+  
+    .option {
+      margin: 10px 0;
+      padding: 12px;
+      border-radius: 8px;
+      background-color: #fefefe;
+      color: #333;
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
+  
+    .option.correct {
+      background: #28a745;
+      color: #fff;
+    }
+  
+    .option.wrong {
+      background: #dc3545;
+      color: #fff;
+    }
+  
+    #navigation,
+    #quiz-info {
+      margin-top: 20px;
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+    }
+  
+    .coin {
+      font-size: 18px;
+      color: gold;
+      font-weight: bold;
+    }
+  
+    #toggle-theme {
+      position: absolute;
+      top: -45px;
+      right: 2px;
+      padding: 8px 16px;
+      font-size: 10px;
+      border: none;
+      border-radius: 7px;
+      background: #ea8f06;
+      color: #ffda06;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+  
+    #toggle-theme:hover {
+      background: #ff9900;
+    }
+  
+    body.light-mode #toggle-theme {
+      background: #cbc9c9;
+      color: #000000;
+    }
+  
+    body.light-mode .container {
+      background: rgba(255, 255, 255, 0.6);
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+      color: #000;
+    }
+  
+    body.light-mode .option {
+      background-color: #fff;
+      color: #000000;
+    }
+  
+    body.light-mode .option.correct {
+      background-color: #28a745;
+      color: #fff;
+    }
+  
+    body.light-mode .option.wrong {
+      background-color: #dc3545;
+      color: #fff;
+    }
+    
+    #loading {
+      text-align: center;
+      font-size: 18px;
+      color: #fab300;
+    }
+    
+    .spinner {
+      border: 4px solid rgba(0, 0, 0, 0.1);
+      border-radius: 50%;
+      border-top: 4px solid #fab300;
+      width: 30px;
+      height: 30px;
+      animation: spin 1s linear infinite;
+      margin: 20px auto;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <button id="toggle-theme">🌗 Toggle Theme</button>
+    
+    <div id="login-box">
+      <h1>🚀 Welcome to my Quiz app</h1>
+      <button onclick="login()">Proceed</button>
+    </div>
+
+    <div id="user-form">
+      <h2>Enter Your Details</h2>
+      <input type="text" id="name" placeholder="Your Name" />
+      <input type="text" id="enroll" placeholder="Enrollment ID" />
+      <button onclick="goToSubject()">Continue</button>
+    </div>
+
+    <div id="question-box">
+      <h2>Choose Quiz Options</h2>
+      <select id="category">
+        <option value="9">General Knowledge</option>
+        <option value="17">Science & Nature</option>
+        <option value="18">Science: Computers</option>
+        <option value="19">Science: Mathematics</option>
+        <option value="22">Geography</option>
+        <option value="23">History</option>
+        <option value="24">Politics</option>
+        <option value="25">Art</option>
+        <option value="20">Mythology</option>
+        <option value="21">Sports</option>
+      </select>
+      <select id="difficulty">
+        <option value="easy">Easy</option>
+        <option value="medium">Medium</option>
+        <option value="hard">Hard</option>
+      </select>
+      <select id="amount">
+        <option value="5">5 Questions</option>
+        <option value="10">10 Questions</option>
+        <option value="15">15 Questions</option>
+      </select>
+      <button onclick="startQuiz()">Start Quiz</button>
+    </div>
+
+    <div id="loading">
+      <div class="spinner"></div>
+      <p>Loading questions...</p>
+    </div>
+
+    <div id="quiz-box">
+      <div id="quiz-info">
+        <div>Q <span id="qno">1</span>/<span id="total-questions">5</span></div>
+        <div>⏱️ <span id="timer">15</span>s</div>
+        <div class="coin">💰 <span id="coins">0</span></div>
+      </div>
+      <h2 id="question"></h2>
+      <div id="options"></div>
+      <div id="navigation">
+        <button onclick="nextQuestion()">Next</button>
+        <button onclick="restart()">Restart</button>
+        <button onclick="goHome()">Home</button>
+      </div>
+    </div>
+
+    <div id="summary-box">
+      <h2>🎉 Quiz Completed!</h2>
+      <p id="summary-text"></p>
+      <button onclick="restart()">🔁 Restart</button>
+      <button onclick="goHome()">🏠 Home</button>
+    </div>
+  </div>
+
+  <script>
+    let currentQ = 0, selectedSet = [], score = 0, timer;
+    const API_URL = "https://opentdb.com/api.php";
+
+    const gmailBox = document.getElementById("login-box");
+    const userForm = document.getElementById("user-form");
+    const qBox = document.getElementById("question-box");
+    const quizBox = document.getElementById("quiz-box");
+    const summaryBox = document.getElementById("summary-box");
+    const loadingBox = document.getElementById("loading");
+
+    window.onload = () => gmailBox.style.display = "block";
+
+    function login() {
+      gmailBox.style.display = "none";
+      userForm.style.display = "block";
+    }
+
+    function goToSubject() {
+      const name = document.getElementById("name").value;
+      const enroll = document.getElementById("enroll").value;
+      if (!name || !enroll) return alert("Enter all fields!");
+      userForm.style.display = "none";
+      qBox.style.display = "block";
+    }
+
+    async function startQuiz() {
+      const category = document.getElementById("category").value;
+      const difficulty = document.getElementById("difficulty").value;
+      const amount = document.getElementById("amount").value;
+      
+      qBox.style.display = "none";
+      loadingBox.style.display = "block";
+      
+      try {
+        const response = await fetch(`${API_URL}?amount=${amount}&category=${category}&difficulty=${difficulty}&type=multiple`);
+        const data = await response.json();
+        
+        if (data.response_code === 0) {
+          selectedSet = data.results.map(q => ({
+            q: decodeHtmlEntities(q.question),
+            o: shuffleArray([...q.incorrect_answers.map(a => decodeHtmlEntities(a)), 
+                            decodeHtmlEntities(q.correct_answer)]),
+            a: 3 // Correct answer is always last after shuffling
+          }));
+          
+          // Now set the correct answer index after shuffling
+          selectedSet.forEach((q, i) => {
+            const correctAnswer = decodeHtmlEntities(data.results[i].correct_answer);
+            q.a = q.o.indexOf(correctAnswer);
+          });
+          
+          currentQ = 0;
+          score = 0;
+          loadingBox.style.display = "none";
+          quizBox.style.display = "block";
+          document.getElementById("coins").innerText = 0;
+          document.getElementById("total-questions").innerText = selectedSet.length;
+          loadQuestion();
+        } else {
+          throw new Error("Could not fetch questions");
+        }
+      } catch (error) {
+        console.error("Error fetching questions:", error);
+        alert("Failed to load questions. Please try again.");
+        loadingBox.style.display = "none";
+        qBox.style.display = "block";
+      }
+    }
+
+    function decodeHtmlEntities(text) {
+      const textArea = document.createElement('textarea');
+      textArea.innerHTML = text;
+      return textArea.value;
+    }
+
+    function shuffleArray(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    }
+
+    function loadQuestion() {
+      clearInterval(timer);
+      let timeLeft = 15;
+      document.getElementById("timer").innerText = timeLeft;
+      timer = setInterval(() => {
+        timeLeft--;
+        document.getElementById("timer").innerText = timeLeft;
+        if (timeLeft <= 0) nextQuestion();
+      }, 1000);
+
+      const q = selectedSet[currentQ];
+      document.getElementById("qno").innerText = currentQ + 1;
+      document.getElementById("question").innerText = q.q;
+
+      const optBox = document.getElementById("options");
+      optBox.innerHTML = "";
+      q.o.forEach((opt, i) => {
+        const div = document.createElement("div");
+        div.className = "option";
+        div.innerText = opt;
+        div.onclick = () => checkAnswer(i, div);
+        optBox.appendChild(div);
+      });
+    }
+
+    function checkAnswer(index, el) {
+      const correct = selectedSet[currentQ].a;
+      const options = document.querySelectorAll(".option");
+      options.forEach(o => o.style.pointerEvents = "none");
+      if (index === correct) {
+        el.classList.add("correct");
+        score++;
+        document.getElementById("coins").innerText = score;
+      } else {
+        el.classList.add("wrong");
+        options[correct].classList.add("correct");
+      }
+    }
+
+    function nextQuestion() {
+      clearInterval(timer);
+      currentQ++;
+      if (currentQ < selectedSet.length) {
+        loadQuestion();
+      } else {
+        quizBox.style.display = "none";
+        summaryBox.style.display = "block";
+        document.getElementById("summary-text").innerText = `You scored ${score} out of ${selectedSet.length}`;
+      }
+    }
+
+    function restart() {
+      summaryBox.style.display = "none";
+      qBox.style.display = "block";
+    }
+
+    function goHome() {
+      summaryBox.style.display = "none";
+      userForm.style.display = "none";
+      quizBox.style.display = "none";
+      qBox.style.display = "none";
+      gmailBox.style.display = "block";
+    }
+
+    document.getElementById("toggle-theme").onclick = () => {
+      document.body.classList.toggle("light-mode");
+    };
+  </script>
+</body>
+</html>
